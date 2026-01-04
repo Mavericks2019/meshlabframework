@@ -1,0 +1,86 @@
+// tab_manager.h
+#pragma once
+#ifndef TAB_MANAGER_H
+#define TAB_MANAGER_H
+
+#include <QObject>
+#include <QWidget>
+#include <QTabWidget>
+#include <QMenuBar>
+#include <QMap>
+#include <QList>
+#include <functional>
+
+#include "menu_utils.h"
+
+// 前向声明
+#include "glwidget/baseglwidget.h"
+#include "tabs/basic_tab.h"
+#include "menu_utils.h"
+
+// Tab管理器类
+class TabManager : public QObject {
+    Q_OBJECT
+
+public:
+    explicit TabManager(QWidget* mainWindow);
+    ~TabManager();
+
+    // 初始化所有tab
+    void initializeTabs();
+    
+    // 获取tab widget
+    UIUtils::CloseableTabWidget* getTabWidget() const { return tabWidget; }
+    
+    // 获取菜单栏
+    QMenuBar* getMenuBar() const { return menuBar; }
+    
+    // 获取控制面板容器
+    QWidget* getControlContainer() const { return controlContainer; }
+
+private:
+    // 动态创建tab页面
+    void createTab(const QString& title, bool switchToTab);
+    
+    // 删除tab
+    void deleteTab(const QString& title);
+    
+    // 清理tab的所有资源
+    void cleanupTab(const QString& title);
+
+    // 创建特定的tab页面
+    void createBasicTab();
+
+    // 创建控制面板
+    void createControlPanel(const QString& title);
+    
+    // 连接信号
+    void connectSignals();
+
+    // 主窗口引用
+    QWidget* mainWindow;
+
+    // Tab相关控件
+    UIUtils::CloseableTabWidget* tabWidget;
+    QMenuBar* menuBar;
+    
+    // 存储Tab信息的列表
+    QList<UIUtils::TabInfo> tabInfos;
+    
+    // 存储控制面板映射
+    QMap<QString, QWidget*> controlPanelMap;
+    
+    // 控制面板容器
+    QWidget* controlContainer;
+    
+    // 存储是否已创建的标记
+    QMap<QString, bool> tabCreated;
+
+    // GLWidget
+    BaseGLWidget* basicGlWidget;
+
+    // 信息标签
+    QLabel* basicInfoLabel;
+};
+
+#endif // TAB_MANAGER_H
