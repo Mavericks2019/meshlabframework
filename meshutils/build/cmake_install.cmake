@@ -1,4 +1,4 @@
-# Install script for directory: /opt/project/meshlab/meshutils
+# Install script for directory: /opt/project/meshlab_framework/meshutils
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -55,8 +55,8 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     endif()
   endforeach()
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES
-    "/opt/project/meshlab/meshutils/build/lib/libmymesh.so.1.0.0"
-    "/opt/project/meshlab/meshutils/build/lib/libmymesh.so.1"
+    "/opt/project/meshlab_framework/meshutils/build/lib/libmymesh.so.1.0.0"
+    "/opt/project/meshlab_framework/meshutils/build/lib/libmymesh.so.1"
     )
   foreach(file
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libmymesh.so.1.0.0"
@@ -72,11 +72,11 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/opt/project/meshlab/meshutils/build/lib/libmymesh.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/opt/project/meshlab_framework/meshutils/build/lib/libmymesh.so")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/opt/project/meshlab/meshutils/my_traits.h")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/opt/project/meshlab_framework/meshutils/my_traits.h")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -87,5 +87,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/opt/project/meshlab/meshutils/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/opt/project/meshlab_framework/meshutils/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
