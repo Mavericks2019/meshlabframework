@@ -61,7 +61,52 @@ if(UNIX AND NOT APPLE)  # 检查是否为Linux系统（Unix且不是苹果）
 elseif(APPLE)
     message(FATAL_ERROR "macOS build not yet implemented. Please add macOS-specific configuration here.")
 elseif(WIN32)
-    message(FATAL_ERROR "Windows build not yet implemented. Please add Windows-specific configuration here.")
+    set(QT5_ROOT "D:/qt/5.11.1/msvc2017_64")
+    set(CMAKE_PREFIX_PATH "${QT5_ROOT};${CMAKE_PREFIX_PATH}")
+
+
+    find_package(Qt5 REQUIRED COMPONENTS
+        Core
+        Widgets
+        OpenGL
+    )
+    add_executable(${PROJECT_NAME} main.cpp)
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        Qt5::Core
+        Qt5::Widgets
+        Qt5::OpenGL
+    )
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+    # 复制必要的DLL到输出目录（Windows）
+    if(WIN32)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QT5_ROOT}/bin/Qt5Core.dll"
+                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QT5_ROOT}/bin/Qt5Widgets.dll"
+                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QT5_ROOT}/bin/Qt5Gui.dll"
+                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
+        )
+    endif()
+
+    if(MSVC)
+        # 禁用某些警告
+        add_compile_options(/wd4251)  # 禁用dll接口警告
+        add_compile_options(/wd4275)  # 禁用非dll接口警告
+        
+        # 设置字符集
+        add_definitions(-DUNICODE -D_UNICODE)
+    endif()
+
 else()
     message(FATAL_ERROR "Unsupported operating system")
 endif()
