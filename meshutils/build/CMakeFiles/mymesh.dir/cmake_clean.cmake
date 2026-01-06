@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
-  ".1"
   "CMakeFiles/mymesh.dir/my_traits.cpp.o"
   "CMakeFiles/mymesh.dir/my_traits.cpp.o.d"
+  "lib/.1"
   "lib/libmymesh.pdb"
   "lib/libmymesh.so"
   "lib/libmymesh.so.1"
