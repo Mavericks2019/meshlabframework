@@ -75,14 +75,12 @@ elseif(WIN32)
     # 设置Eigen3包含目录
     set(EIGEN3_INCLUDE_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/include/eigen3")
     
-    # 设置CGAL路径（使用vcpkg安装）
-    set(CGAL_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/share/cgal")
+    # 设置CGAL包含目录（header-only）
     set(CGAL_INCLUDE_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/include")
-    set(CGAL_LIB_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/lib")
     
     # 设置MY_TRI库路径
-    set(MY_TRI_LIB "D:/projects/meshlab_framework/libs/mymesh.lib")
-    set(MY_TRI_DLL "D:/projects/meshlab_framework/libs/mymesh.dll")
+    set(MY_TRI_LIB "D:/projects/meshlabframework/libs/mymesh.lib")
+    set(MY_TRI_DLL "D:/projects/meshlabframework/libs/mymesh.dll")
     
     # 检查MY_TRI库是否存在
     if(NOT EXISTS ${MY_TRI_LIB})
@@ -130,6 +128,8 @@ elseif(WIN32)
         NOMINMAX           # 防止Windows min/max宏与std::min/max冲突
         UNICODE
         _UNICODE
+        CGAL_USE_GMP
+        CGAL_USE_MPFR
     )
     
     # 链接库
@@ -140,8 +140,10 @@ elseif(WIN32)
         ${MY_TRI_LIB}
         "${OPENMESH_LIB_DIR}/OpenMeshCore.lib"
         "${OPENMESH_LIB_DIR}/OpenMeshTools.lib"
-        "${CGAL_LIB_DIR}/CGAL.lib"
+        # CGAL是header-only，不需要链接库
         opengl32.lib
+        gmp.lib
+        mpfr.lib
     )
     
     # 设置输出目录
@@ -185,12 +187,7 @@ elseif(WIN32)
             "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
     )
     
-    # 复制CGAL DLL
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CGAL_LIB_DIR}/../bin/CGAL.dll"
-            "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
-    )
+    # 注意：CGAL是header-only，不需要复制DLL
     
     if(MSVC)
         # 禁用某些警告
