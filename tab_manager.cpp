@@ -1,4 +1,3 @@
-// tab_manager.cpp
 #include "tab_manager.h"
 
 #include <QVBoxLayout>
@@ -15,13 +14,15 @@ TabManager::TabManager(QWidget* mainWindow)
     , menuBar(nullptr)
     , controlContainer(nullptr)
     , basicGlWidget(nullptr)
+    , cgalGlWidget(nullptr)
     , basicInfoLabel(nullptr)
+    , cgalInfoLabel(nullptr)
 {
 }
 
 TabManager::~TabManager() {
     // 清理已创建的tab
-    QStringList tabNames = {"OpenMesh"};
+    QStringList tabNames = {"OpenMesh", "CGAL"};
     
     for (const QString& title : tabNames) {
         cleanupTab(title);
@@ -119,6 +120,8 @@ void TabManager::createTab(const QString& title, bool switchToTab) {
     // 根据标题创建相应的tab
     if (title == "OpenMesh") {
         createBasicTab();
+    } else if (title == "CGAL") {
+        createCGALTab();
     }
     
     // 标记为已创建
@@ -146,6 +149,15 @@ void TabManager::cleanupTab(const QString& title) {
         if (basicInfoLabel) {
             delete basicInfoLabel;
             basicInfoLabel = nullptr;
+        }
+    } else if (title == "CGAL") {
+        if (cgalGlWidget) {
+            delete cgalGlWidget;
+            cgalGlWidget = nullptr;
+        }
+        if (cgalInfoLabel) {
+            delete cgalInfoLabel;
+            cgalInfoLabel = nullptr;
         }
     }
     
@@ -219,6 +231,7 @@ void TabManager::createBasicTab() {
     info.widget = basicTab;
     info.controlPanel = controlPanelMap["OpenMesh"];
     info.isVisible = true;
+    info.isDefault = true;
     info.originalIndex = 0;
     info.action = tabWidget->getActionForTitle("OpenMesh");
     
@@ -226,6 +239,44 @@ void TabManager::createBasicTab() {
     bool found = false;
     for (int i = 0; i < tabInfos.size(); ++i) {
         if (tabInfos[i].title == "OpenMesh") {
+            tabInfos[i] = info;
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        tabInfos.append(info);
+    }
+}
+
+void TabManager::createCGALTab() {
+    if (!cgalGlWidget) {
+        cgalGlWidget = new CGALGLWidget;
+    }
+    
+    QWidget* cgalTab = ::createCGALTab(cgalGlWidget);
+    tabWidget->addTabWithTitle(cgalTab, "CGAL");
+    
+    // 创建控制面板（如果不存在）
+    if (!controlPanelMap.contains("CGAL")) {
+        createControlPanel("CGAL");
+    }
+    
+    // 更新tabInfos
+    UIUtils::TabInfo info;
+    info.name = "CGAL";
+    info.title = "CGAL";
+    info.widget = cgalTab;
+    info.controlPanel = controlPanelMap["CGAL"];
+    info.isVisible = true;
+    info.isDefault = false;
+    info.originalIndex = 1;
+    info.action = tabWidget->getActionForTitle("CGAL");
+    
+    // 替换或添加tab信息
+    bool found = false;
+    for (int i = 0; i < tabInfos.size(); ++i) {
+        if (tabInfos[i].title == "CGAL") {
             tabInfos[i] = info;
             found = true;
             break;
@@ -255,6 +306,17 @@ void TabManager::createControlPanel(const QString& title) {
         basicControlLayout->addWidget(createBasicControlPanel(basicGlWidget, basicInfoLabel, mainWindow));
         
         controlPanel = basicControlPanel;
+    } else if (title == "CGAL") {
+        if (!cgalGlWidget) cgalGlWidget = new CGALGLWidget;
+        
+        QWidget *cgalControlPanel = new QWidget;
+        QVBoxLayout *cgalControlLayout = new QVBoxLayout(cgalControlPanel);
+        cgalControlLayout->setAlignment(Qt::AlignTop);
+        cgalControlLayout->addWidget(UIUtils::createColorSettingsGroup(cgalGlWidget));
+        cgalControlLayout->addWidget(UIUtils::createModelInfoGroup(&cgalInfoLabel));
+        cgalControlLayout->addWidget(createCGALControlPanel(cgalGlWidget, cgalInfoLabel, mainWindow));
+        
+        controlPanel = cgalControlPanel;
     }
     
     if (controlPanel) {

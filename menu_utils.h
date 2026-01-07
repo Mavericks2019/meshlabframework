@@ -71,13 +71,14 @@ namespace UIUtils {
 
     // Tab信息结构体
     struct TabInfo {
-        QString name;
-        QString title;
-        QWidget* widget;
-        QWidget* controlPanel;
-        QAction* action;
-        bool isVisible;
-        int originalIndex;
+        QString name;          // 内部名称
+        QString title;         // 显示标题
+        QWidget* widget;       // 标签页widget
+        QWidget* controlPanel; // 控制面板
+        QAction* action;       // 对应的菜单action
+        bool isVisible;        // 是否可见
+        int originalIndex;     // 原始索引
+        bool isDefault;        // 是否是默认tab
     };
 
     // 创建菜单栏

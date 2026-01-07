@@ -15,7 +15,9 @@
 
 // 前向声明
 #include "glwidget/baseglwidget.h"
+#include "glwidget/cgalglwidget.h"
 #include "tabs/basic_tab.h"
+#include "tabs/cgal_tab.h"
 #include "menu_utils.h"
 
 // Tab管理器类
@@ -50,6 +52,7 @@ private:
 
     // 创建特定的tab页面
     void createBasicTab();
+    void createCGALTab();  // 新增：创建CGAL标签页
 
     // 创建控制面板
     void createControlPanel(const QString& title);
@@ -78,9 +81,11 @@ private:
 
     // GLWidget
     BaseGLWidget* basicGlWidget;
+    CGALGLWidget* cgalGlWidget;  // 新增：CGAL GLWidget
 
     // 信息标签
     QLabel* basicInfoLabel;
+    QLabel* cgalInfoLabel;  // 新增：CGAL信息标签
 };
 
 #endif // TAB_MANAGER_H

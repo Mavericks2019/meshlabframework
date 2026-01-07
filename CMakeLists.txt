@@ -12,8 +12,9 @@ set(CMAKE_AUTOUIC OFF)
 
 if(UNIX AND NOT APPLE)  # 检查是否为Linux系统（Unix且不是苹果）
     message(STATUS "Building for Linux system")
-    
+    find_package(OpenMesh REQUIRED)
     find_package(Eigen3 REQUIRED)
+    find_package(CGAL REQUIRED)
     set(MY_TRI ${CMAKE_CURRENT_SOURCE_DIR}/meshutils/build/lib/libmymesh.so)
     
     # 检查 MY_TRI 库是否存在
@@ -28,18 +29,20 @@ if(UNIX AND NOT APPLE)  # 检查是否为Linux系统（Unix且不是苹果）
     # 添加着色器资源文件
     qt5_add_resources(RESOURCE_FILES shaders.qrc)
     
-    find_package(OpenMesh REQUIRED)
     
     # 添加可执行文件
     add_executable(${PROJECT_NAME}
         main.cpp
         glwidget/baseglwidget.h
         glwidget/baseglwidget.cpp
+        glwidget/cgalglwidget.h
+        glwidget/cgalglwidget.cpp
         menu_utils.cpp
         menu_utils.h
         tab_manager.cpp
         tab_manager.h
         tabs/basic_tab.h
+        tabs/cgal_tab.h
         ${MY_TRI}
         ${RESOURCE_FILES}
     )
@@ -52,6 +55,7 @@ if(UNIX AND NOT APPLE)  # 检查是否为Linux系统（Unix且不是苹果）
         Eigen3::Eigen
         OpenMeshCore
         OpenMeshTools
+        CGAL::CGAL
         ${MY_TRI}
     )
     
@@ -70,6 +74,11 @@ elseif(WIN32)
     
     # 设置Eigen3包含目录
     set(EIGEN3_INCLUDE_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/include/eigen3")
+    
+    # 设置CGAL路径（使用vcpkg安装）
+    set(CGAL_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/share/cgal")
+    set(CGAL_INCLUDE_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/include")
+    set(CGAL_LIB_DIR "C:/Users/Administrator/vcpkg/installed/x64-windows/lib")
     
     # 设置MY_TRI库路径
     set(MY_TRI_LIB "D:/projects/meshlab_framework/libs/mymesh.lib")
@@ -97,11 +106,14 @@ elseif(WIN32)
         main.cpp
         glwidget/baseglwidget.h
         glwidget/baseglwidget.cpp
+        glwidget/cgalglwidget.h
+        glwidget/cgalglwidget.cpp
         menu_utils.cpp
         menu_utils.h
         tab_manager.cpp
         tab_manager.h
         tabs/basic_tab.h
+        tabs/cgal_tab.h
         ${RESOURCE_FILES}
     )
     
@@ -109,6 +121,7 @@ elseif(WIN32)
     target_include_directories(${PROJECT_NAME} PRIVATE
         ${EIGEN3_INCLUDE_DIR}
         ${OPENMESH_INCLUDE_DIR}
+        ${CGAL_INCLUDE_DIR}
     )
     
     # 设置编译器定义
@@ -127,6 +140,7 @@ elseif(WIN32)
         ${MY_TRI_LIB}
         "${OPENMESH_LIB_DIR}/OpenMeshCore.lib"
         "${OPENMESH_LIB_DIR}/OpenMeshTools.lib"
+        "${CGAL_LIB_DIR}/CGAL.lib"
         opengl32.lib
     )
     
@@ -168,6 +182,13 @@ elseif(WIN32)
             "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${OPENMESH_LIB_DIR}/../bin/OpenMeshTools.dll"
+            "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
+    )
+    
+    # 复制CGAL DLL
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CGAL_LIB_DIR}/../bin/CGAL.dll"
             "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
     )
     

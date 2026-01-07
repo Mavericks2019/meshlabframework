@@ -179,11 +179,11 @@ namespace UIUtils {
             }
         )");
 
-        // Parameter 菜单 - 只保留一个tab
+        // Parameter 菜单 - 添加两个tab选项
         QMenu* parameterMenu = menuBar->addMenu("&Parameter");
         
-        // 只保留一个标签页
-        QStringList tabNames = {"OpenMesh"};
+        // 定义所有可用的tab
+        QStringList tabNames = {"OpenMesh", "CGAL"};
         
         // 创建动作组，确保只有一个被选中
         QActionGroup* tabActionGroup = new QActionGroup(parameterMenu);
@@ -194,9 +194,10 @@ namespace UIUtils {
             
             // 设置可选中
             action->setCheckable(true);
-            action->setChecked(true); // 默认选中
+            // 默认选中OpenMesh
+            action->setChecked(i == 0);
             
-            // 添加快捷键（Ctrl+1）
+            // 添加快捷键（Ctrl+1, Ctrl+2）
             action->setShortcut(QKeySequence(QString("Ctrl+%1").arg(i + 1)));
             
             // 添加到动作组
@@ -210,7 +211,8 @@ namespace UIUtils {
             info.name = tabNames[i];
             info.title = tabNames[i];
             info.action = action;
-            info.isVisible = true;
+            info.isVisible = (i == 0); // 默认只有OpenMesh可见
+            info.isDefault = (i == 0); // OpenMesh是默认tab
             info.originalIndex = i;
             info.widget = nullptr;
             info.controlPanel = nullptr;
@@ -274,7 +276,7 @@ namespace UIUtils {
         });
         parameterMenu->addAction(exitAction);
 
-        // Render 菜单 (暂时留空，后续可以添加功能)
+        // Render 菜单
         QMenu* renderMenu = menuBar->addMenu("&Render");
         
         // 添加渲染选项

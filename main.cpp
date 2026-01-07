@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 
     // 创建主窗口
     QWidget mainWindow;
-    mainWindow.resize(1280, 800);
+    // 增大窗口默认大小到 1600x900
+    mainWindow.resize(1600, 900);
     
     // 创建主布局
     QVBoxLayout *outerLayout = new QVBoxLayout(&mainWindow);
@@ -55,7 +56,8 @@ int main(int argc, char *argv[])
     // 创建主内容区域
     QWidget *contentWidget = new QWidget;
     QHBoxLayout *mainLayout = new QHBoxLayout(contentWidget);
-    mainLayout->setContentsMargins(10, 10, 10, 10);
+    // 增大边距
+    mainLayout->setContentsMargins(15, 15, 15, 15);
     
     // 添加tab widget和控制面板到主布局
     mainLayout->addWidget(tabManager->getTabWidget(), 8);
