@@ -82,11 +82,23 @@ elseif(WIN32)
     set(MY_TRI_LIB "D:/projects/meshlabframework/libs/mymesh.lib")
     set(MY_TRI_DLL "D:/projects/meshlabframework/libs/mymesh.dll")
     
+    # 设置QGLViewerWidget库路径（新增）
+    set(QGLVIEWER_INCLUDE_DIR "D:/projects/openglviwer")
+    set(QGLVIEWER_LIB "D:/projects/meshlabframework/libs/QGLViewerWidget.lib")
+    set(QGLVIEWER_DLL "D:/projects/meshlabframework/libs/QGLViewerWidget.dll")
+    
     # 检查MY_TRI库是否存在
     if(NOT EXISTS ${MY_TRI_LIB})
         message(WARNING "MY_TRI library not found at ${MY_TRI_LIB}.")
     else()
         message(STATUS "Found MY_TRI library: ${MY_TRI_LIB}")
+    endif()
+    
+    # 检查QGLViewerWidget库是否存在（新增）
+    if(NOT EXISTS ${QGLVIEWER_LIB})
+        message(WARNING "QGLViewerWidget library not found at ${QGLVIEWER_LIB}.")
+    else()
+        message(STATUS "Found QGLViewerWidget library: ${QGLVIEWER_LIB}")
     endif()
     
     # 设置OpenMesh路径（假设使用vcpkg安装）
@@ -112,6 +124,7 @@ elseif(WIN32)
         tab_manager.h
         tabs/basic_tab.h
         tabs/cgal_tab.h
+        tabs/qglviewer_tab.h              # 新增
         ${RESOURCE_FILES}
     )
     
@@ -120,6 +133,7 @@ elseif(WIN32)
         ${EIGEN3_INCLUDE_DIR}
         ${OPENMESH_INCLUDE_DIR}
         ${CGAL_INCLUDE_DIR}
+        ${QGLVIEWER_INCLUDE_DIR}          # 新增
     )
     
     # 设置编译器定义
@@ -138,6 +152,7 @@ elseif(WIN32)
         Qt5::Widgets
         Qt5::OpenGL
         ${MY_TRI_LIB}
+        ${QGLVIEWER_LIB}                   # 新增
         "${OPENMESH_LIB_DIR}/OpenMeshCore.lib"
         "${OPENMESH_LIB_DIR}/OpenMeshTools.lib"
         # CGAL是header-only，不需要链接库
@@ -173,6 +188,15 @@ elseif(WIN32)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${MY_TRI_DLL}"
+                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
+        )
+    endif()
+    
+    # 复制QGLViewerWidget DLL（新增）
+    if(EXISTS ${QGLVIEWER_DLL})
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QGLVIEWER_DLL}"
                 "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/"
         )
     endif()

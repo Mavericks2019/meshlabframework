@@ -179,11 +179,11 @@ namespace UIUtils {
             }
         )");
 
-        // Parameter 菜单 - 添加两个tab选项
+        // Parameter 菜单 - 添加三个tab选项（新增QGLViewer）
         QMenu* parameterMenu = menuBar->addMenu("&Parameter");
         
         // 定义所有可用的tab
-        QStringList tabNames = {"OpenMesh", "CGAL"};
+        QStringList tabNames = {"OpenMesh", "CGAL", "OpenMesh Viewer"};
         
         // 创建动作组，确保只有一个被选中
         QActionGroup* tabActionGroup = new QActionGroup(parameterMenu);
@@ -197,7 +197,7 @@ namespace UIUtils {
             // 默认选中OpenMesh
             action->setChecked(i == 0);
             
-            // 添加快捷键（Ctrl+1, Ctrl+2）
+            // 添加快捷键（Ctrl+1, Ctrl+2, Ctrl+3）
             action->setShortcut(QKeySequence(QString("Ctrl+%1").arg(i + 1)));
             
             // 添加到动作组

@@ -18,6 +18,7 @@
 #include "glwidget/cgalglwidget.h"
 #include "tabs/basic_tab.h"
 #include "tabs/cgal_tab.h"
+#include "tabs/qglviewer_tab.h"  // 新增
 #include "menu_utils.h"
 
 // Tab管理器类
@@ -53,6 +54,7 @@ private:
     // 创建特定的tab页面
     void createBasicTab();
     void createCGALTab();  // 新增：创建CGAL标签页
+    void createOpenMeshViewerTab(); // 新增：创建OpenMesh Viewer
 
     // 创建控制面板
     void createControlPanel(const QString& title);
@@ -82,10 +84,12 @@ private:
     // GLWidget
     BaseGLWidget* basicGlWidget;
     CGALGLWidget* cgalGlWidget;  // 新增：CGAL GLWidget
+    QGLViewerWidget* openMeshViewerWidget;
 
     // 信息标签
     QLabel* basicInfoLabel;
     QLabel* cgalInfoLabel;  // 新增：CGAL信息标签
+    QLabel* openMeshViewerInfoLabel;
 };
 
 #endif // TAB_MANAGER_H
